@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="nav">
+        <div class="left">
+            <h1> Header</h1>
+        </div>
+        <div class="right">
+            <a href="index.html">Signup</a>
+            <a href="profile.html">Profile</a>
+        </div>
+    </div>
+    <div class="body">
+
+        <h1>Welcome to your profile page</h1>
+        <div class="details">
+            <p>Full Name: <span id="fullname"></span></p>
+            <p>Email: <span id="email"></span></p>
+            <p>
+
+                <label for="password-input">Password:</label>
+                <input type="password" id="password-input">
+                <button type="button" id="show-password-button">Show Password</button>
+            </p>
+ 
+        </div>
+        <button id="logout-btn">Logout</button>
+        <div>
+            <p  id="errors" style="color: red;"></p>
+        </div>
+    </div>
+	<script>
+		// Check if user is authenticated
+		const accessToken = localStorage.getItem('accessToken');
+		if (!accessToken) {
+			// Redirect to signup page if user is not authenticated
+			window.location.href = 'index.html';
+		}
+
+		// Get user data from local storage
+		const userData = JSON.parse(localStorage.getItem('user'));
+
+		// Display user data on profile page
+		document.getElementById('fullname').textContent = userData.fullname;
+		document.getElementById('email').textContent = userData.email;
+
+        // Display password as asterisks by default
+        // let passwordValue = userData.password.replace(/./g, '*');
+        // document.getElementById('password-input').textContent = passwordValue;
+
+		// Add event listener to logout button
+		document.getElementById('logout-btn').addEventListener('click', () => {
+			// Clear local storage and redirect to signup page
+			localStorage.clear();
+			window.location.href = 'index.html';
+		});
+        
+       
+        const passwordInput = document.getElementById('password-input');
+        passwordInput.value=userData.password.replace(/./g, '*');
+
+        const showPasswordButton = document.getElementById('show-password-button');
+        showPasswordButton.addEventListener('click', () => {
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                passwordInput.value=userData.password;
+                showPasswordButton.textContent = 'Hide Password';
+            } else {
+                passwordInput.type = 'password';
+                passwordInput.value = userData.password;
+                showPasswordButton.textContent = 'Show Password';
+            }
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // Add event listener to Signup link
+		document.querySelector('a[href="index.html"]').addEventListener('click', (event) => {
+			if (accessToken) {
+				// Prevent default behavior and redirect to profile page
+				event.preventDefault();
+                console.log("signup")
+                document.getElementById('errors').textContent = 'Please logout first to go to the Signup page';
+				setTimeout(() => {
+                   window.location.href = 'profile.html';
+                }, 1000);
+			}
+		});
+	</script>
+</body>
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sig Up</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    
+        
+        <div class="nav">
+            <div class="left">
+                <h1>Header</h1>
+            </div>
+            <div class="right">
+                <a href="#">Signup</a>
+                <a href="profile.html" style="margin-left: 10px;">Profile</a>
+            </div>
+        </div>
+        <div class="body">
+        <h1>Sign Up</h1>
+        <form id="signup-form">
+            <div class="inputs">
+
+                <label for="fullname">Full Name:</label>
+                <input type="text" id="fullname" name="fullname" >
+            </div>
+
+
+            <div class="inputs">
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" >
+            </div>
+    
+
+            <div class="inputs">
+
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" >
+            </div>
+    
+
+            <div class="inputs">
+
+                <label for="confirm-password">Confirm Password:</label>
+                <input type="password" id="confirm-password" name="confirm-password" >
+            </div>
+    
+            <button id="submit" type="submit">Signup</button>
+        </form>
+        <p id="error" style="color: red;"></p>
+        <p id="success" style="color: green;"></p>
+    </div>
+	<script>
+		// Add event listener to signup form
+		document.getElementById('signup-form').addEventListener('submit', (event) => {
+			event.preventDefault(); // prevent default form submission
+
+			// Get user input
+			const fullname = document.getElementById('fullname').value;
+			const email = document.getElementById('email').value;
+			const password = document.getElementById('password').value;
+			const confirmPassword = document.getElementById('confirm-password').value;
+
+			// Check if all fields are filled
+			if (!fullname || !email || !password || !confirmPassword) {
+                
+				document.getElementById('error').textContent = 'Error: All fields are mandatory.';
+                setTimeout(() => {
+                    document.getElementById('error').textContent = '';
+                }, 2000);
+				return;
+			}
+
+			// Check if passwords match
+			if (password !== confirmPassword) {
+				document.getElementById('error').textContent = 'Error: Passwords do not match.';
+                setTimeout(() => {
+                    document.getElementById('error').textContent = '';
+                }, 2000);
+				return;
+			}
+
+			// Generate random access token and store user data in local storage
+			const accessToken = generateAccessToken();
+			const userData = {
+				fullname: fullname,
+				email: email,
+				password: password
+			};
+			localStorage.setItem('accessToken', accessToken);
+			localStorage.setItem('user', JSON.stringify(userData));
+
+			// Show success message and redirect to profile page
+			document.getElementById('success').textContent = 'Signed Up Successfully.';
+			setTimeout(() => {
+				window.location.href = 'profile.html';
+			}, 1000); // delay redirect by 1 second to display success message
+
+
+
+		});
+
+
+
+          // Add event listener to Profile link
+        document.querySelector('a[href="profile.html"]').addEventListener('click', (event) => {
+        const accessToken = localStorage.getItem('accessToken');
+        if (!accessToken) {
+            // Prevent default behavior and show error message
+            event.preventDefault();
+            document.getElementById('error').textContent = 'Please signup first to go to the Profile page';
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 1000);
+        }
+    });
+
+
+
+        
+       
+
+
+
+        
+
+
+
+
+
+
+
+		// Function to generate random access token
+		function generateAccessToken() {
+			const chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+			let token = '';
+			for (let i = 0; i < 16; i++) {
+				token += chars[Math.floor(Math.random() * chars.length)];
+			}
+			return token;
+		}
+	</script>
+</body>
+</html>
